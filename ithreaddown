@@ -1,0 +1,42 @@
+#!/bin/bash
+if [[ $# == 2 ]]; then 
+  max=$1
+  min=$2
+else 
+  max=20
+  min=40
+fi
+
+while [[ 1 == 1 ]]; do 
+  date=$(date +%H%M)
+  if [[ $date > "2100" ]]; then exit; fi
+
+
+  north=$(wget  -qO - "http://localhost:8080/json.htm?type=devices&rid=549" |jq '.result[0].Temp')
+  south=$(wget  -qO - "http://localhost:8080/json.htm?type=devices&rid=540" |jq '.result[0].Temp')
+
+ if [[ 1 = $(bc <<< "$north <= -25.7") ]]; then
+    north=$((north+25.7))
+  fi
+  if [[ 1 = $(bc <<< "$south <= -25.7") ]]; then
+    south=$((south+25.7))
+  fi
+
+
+  solar=$(echo "${south}-${north}"| bc -l);
+  solar=${solar#-}
+  solar=$(bc -l <<< "$solar * 10")
+
+  if [[ 1 =  $(bc <<< "$solar < $max") ]]; then
+     bash /home/pi/bin/somfy_shutter.bash DESCENTE
+     text="on a descendu les volets a $(date)  ($solar)"
+     date=" $(date  '+%H:%M:%S')"
+#     echo $text | mailx -s "Volets roulants descente $date" patrice.duc-jacquet@laposte.net
+     ((max=$max-10))
+     /bin/bash -x  /home/pi/bin/ithread $min $max &
+     exit 0
+  fi 
+  sleep 600
+done
+
+
