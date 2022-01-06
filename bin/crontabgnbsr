@@ -1,0 +1,15 @@
+MAILTO=patduc38@gmail.com
+#30 10 * * 5  /bin/bash  /home/pi/bin/somfy_setalarm.bash OFF  
+#00 17 * * 1-5  /bin/bash  /home/pi/bin/somfy_shutter.bash DESCENTE
+#30 17 * * *  /bin/bash  /home/pi/bin/somfy_shutter.bash DESCENTE
+#ete 
+#30 09 * * 1-5  /bin/bash  /home/pi/bin/somfy_shutter.bash DESCENTE
+#ete 05 08 * * 1-5  /bin/bash  /bin/bash /home/pi/bin/withread 250
+#hiver 00 08 * * *  /bin/bash /home/pi/bin/ithread 170  50 
+00 08 * * *  /bin/bash /home/pi/bin/ithread 40  20 
+01 08 * * *  /bin/bash /home/pi/domoticz/scripts/air_quality.bash
+03 08 * * *  /bin/bash /home/pi/domoticz/scripts/monitor_alarm.bash
+#00 21 * * *  /bin/bash /home/pi/domoticz/scripts/garage.bash
+@reboot /bin/bash /home/pi/bin/roma2.sh &
+#00 09 * * 1-5  /bin/bash /home/pi/bin/notif_alarme_off.bash
+#35 10 * * 5  /bin/bash /home/pi/bin/notif_alarme_on.bash
