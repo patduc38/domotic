@@ -12,22 +12,23 @@ while [[ 1 == 1 ]]; do
 
   north=$(wget  -qO - "http://localhost:8080/json.htm?type=devices&rid=540" |jq '.result[0].Temp') 
   south=$(wget  -qO - "http://localhost:8080/json.htm?type=devices&rid=549" |jq '.result[0].Temp')  
-  if [[ 1 = $(bc <<< "$north <= -25.7") ]]; then
-    north=$((north+25.7))
-  fi 
-  if [[ 1 = $(bc <<< "$south <= -25.7") ]]; then
-    south=$((south+25.7))
-  fi 
+ if [[ 1 == $(bc <<< "$north <= -25.7") ]]; then
+    north=$(bc <<< "$north + 25.7")
+  fi
+  if [[ 1 == $(bc <<< "$south <= -25.7") ]]; then
+    south=$(bc <<< "$south + 25.7")
+  fi
 
-  solar=$(echo "${south}-${north}"| bc -l);  
+
+  solar=$(bc <<< "(${south})-(${north})"| bc -l);  
   solar=${solar#-}
   solar=$(bc -l <<< "$solar * 10")
 
-  if [[ 1 =  $(bc <<< "$solar > $min") ]]; then
-     /home/pi/bin/somfy_shutter.bash MONTEE
+  if [[ 1 ==  $(bc <<< "$solar > $min") ]]; then
+     bash /home/pi/bin/somfy_shutter.bash MONTEE
      text="on a remonte les volets a $(date)  ($solar)"
      date=" $(date  '+%H:%M:%S')"
-#     echo $text | mailx -s "Volets roulants $date" patrice.duc-jacquet@laposte.net
+     echo $text | sudo mailx -s "Volets roulants $date" patrice.duc-jacquet@laposte.net
      ((min=$min+1))
      /bin/bash -x /home/pi/bin/ithreaddown $max $min &
      exit 0
