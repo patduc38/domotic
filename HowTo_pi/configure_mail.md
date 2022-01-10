@@ -1,14 +1,15 @@
-Install the following packages 
-------------------------------
-+ apt install bsd-mailx
-+ apt install msmtp
-+ apt install msmtp-mta
+Install  packages 
+-----------------
+```bash
+apt install bsd-mailx
+apt install msmtp
+apt install msmtp-mta
+```
 
 Configuring mail
 ----------------
-
 create **/etc/msmtprc** file with content like
-
+```bash
 #Set default values for all accounts.
 defaults
 auth on
@@ -27,12 +28,12 @@ password <your password>
 
 #Set a default account
 account default : gmail
-
+```
 
 Change file owner/rights 
 ------------------------
-
+```bash
 chown root:msmtp /etc/msmtprc 
 chmod 640 /etc/msmtprc 
-
+```
 
